@@ -63,5 +63,30 @@ class Compras(Base):
     def __str__(self):
         return f"{self.id_compra}, {self.data_hora}, {self.id_cliente}"
 
+class Itens(Base):
+    __tablename__ = "itens"
+
+    id_item = Column(Integer, primary_key=True)
+    quantidade = Column(Integer)
+    preco = Column(Float)
+    id_compra = Column(Integer, ForeignKey("compras.id_compra"))
+    id_produto = Column(Integer, ForeignKey("produtos.id_produto"))
+    
+    compra = relationship("Compra", back_populates="itens")
+    produto_referencia = relationship("Produto", back_populates="itens_compra")
+
+    def __init__(self, id_item, quantidade, preco, id_compra, id_produto):
+        self.id_item = id_item
+        self.quantidade = quantidade
+        self.preco = preco
+        self.id_compra = id_compra
+        self.id_produto = id_produto
+
+    def __str__(self):
+        return f"{self.id_item}, {self.quantidade}, {self.preco}, {self.id_compra}, {self.id_produto}"
+    
+
+
+
 
     
