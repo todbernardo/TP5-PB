@@ -4,7 +4,8 @@ import os
 import pandas as pd
 
 DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(DIR, "dados/banco.db")
+BASE_DIR = os.path.dirname(DIR)
+DB_PATH = os.path.join(BASE_DIR, "dados", "banco.db")
 
 engine = create_engine(f"sqlite:///{DB_PATH}", echo=False)
 Base = declarative_base()

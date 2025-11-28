@@ -1,8 +1,7 @@
 from urllib.request import urlopen
-from io import StringIO
 from bs4 import BeautifulSoup
 import pandas as pd
-import requests
+import os
 
 
 URL = "https://pedrovncs.github.io/lindosprecos/produtos.html#"
@@ -52,5 +51,10 @@ def construir_csv():
 
         if lista_produtos:
             df = pd.DataFrame(lista_produtos)
-            df.to_csv("dados/produtos.csv", index=False, sep=';')
+        
+            DIR = os.path.dirname(os.path.abspath(__file__))
+            BASE_DIR = os.path.dirname(DIR)
+
+            csv_path = os.path.join(BASE_DIR, "dados", "produtos.csv")
+            df.to_csv(csv_path, index=False, sep=';')
 
