@@ -1,5 +1,13 @@
+import sys
+from pathlib import Path
+
+sistema_caixa_path = Path(__file__).parent.parent / 'sistema_caixa'
+sys.path.insert(0, str(sistema_caixa_path))
+
 from arquivo import *
 from tabulate import *
+from banco import *
+from models import Compras, Itens, Cliente
 import datetime
 import pandas as pd
 
@@ -62,33 +70,37 @@ def atendimento():
             if produto_selecionado == 0: 
                 break
 
-            quantidade = int(input("Digite a quantidade: "))
-            if quantidade < 1:
-                print("Erro: quantidade deve ser maior que zero.")
-            else: 
-                produto_encontrado = False
-                carrinho_str = "" 
-                
-                for produto in ler_produtos():
-                    if produto[0] == produto_selecionado:
-                        produto_encontrado = True
+            produto_encontrado = False
+            produto_info = None
+            
+            for produto in ler_produtos():
+                if produto[0] == produto_selecionado:
+                    produto_encontrado = True
+                    produto_info = produto
+                    break
+            
+            if not produto_encontrado:
+                print("Produto não encontrado.")
+            else:
+                quantidade = int(input("Digite a quantidade: "))
 
-                        if quantidade > produto[2]:
-                            print("Estoque do produto incompatível.")
-                        else:
-                            lista_quantidades.append(quantidade)
-                            produtos_comprados.append(produto)
-                            print(f"'{produto[1]}' adicionado ao carrinho!")
+                if quantidade < 1:
+                    print("Erro: quantidade deve ser maior que zero.")
+                else:
+                    if quantidade > produto_info[2]:
+                        print("Estoque do produto incompatível.")
+                    else:
+                        lista_quantidades.append(quantidade)
+                        produtos_comprados.append(produto_info)
+                        print(f"'{produto_info[1]}' adicionado ao carrinho!")
 
-                            for i, prod in enumerate(produtos_comprados):
-                                carrinho_str += f"{prod[1]} ({lista_quantidades[i]}x) | "
-                            print(f"Carrinho: {carrinho_str}")
-                        
-                if not produto_encontrado:
-                    print("Produto não encontrado.")
+                        carrinho_str = ""
+                        for i, prod in enumerate(produtos_comprados):
+                            carrinho_str += f"{prod[1]} ({lista_quantidades[i]}x) | "
+                        print(f"Carrinho: {carrinho_str}")
 
         except Exception as e:
-            print(f"Erro no loop de atendimento: {e}")
+            print(f"Erro no atendimento: {e}")
 
     print("Compra finalizada!")
 
@@ -128,6 +140,7 @@ def atendimento():
     lista_clientes.append(cliente)
     lista_totais.append(total_compra)
 
+    salvar_compra(df_agrupado, cliente) 
     gerar_recibo(df_agrupado, total_compra)
     
     return produto_selecionado
@@ -167,3 +180,4 @@ def gerar_lista_clientes():
             print(produto[1])
     if len(produtos_fora_estoque) == 0:
         print("Não há produtos fora de estoque.")
+

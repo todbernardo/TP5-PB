@@ -6,7 +6,7 @@ def ler_produtos():
 
         lista_produtos = []
         for produto in produtos:
-            lista_produtos.append((produto.id, produto.nome, produto.qntd, produto.preco))
+            lista_produtos.append((produto.id_produto, produto.nome, produto.quantidade, produto.preco))
         
         return lista_produtos
         
@@ -15,10 +15,10 @@ def ler_produtos():
 
 def atualizar_estoque(produto_id, quantidade_comprada):
     try:
-        produto = session.query(Produto).filter_by(id=produto_id).first()
+        produto = session.query(Produto).filter_by(id_produto=produto_id).first()
 
         if produto:
-            produto.qntd -= quantidade_comprada
+            produto.quantidade -= quantidade_comprada
             session.commit()
 
     except Exception as e:

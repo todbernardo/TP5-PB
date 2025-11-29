@@ -1,3 +1,8 @@
+import sys
+import os
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)), 'menus'))
+
 from caixa import *
 from banco import *
 from web_scraping import *
@@ -13,7 +18,7 @@ while True:
     elif comecar_result == 2:
         break
     else:
-        print("\nComando inválido.\n")
+        print("Comando inválido.\n")
 
 gerar_lista_clientes()
 
